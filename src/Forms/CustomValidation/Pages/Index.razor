@@ -1,4 +1,6 @@
-﻿@page "/"
+﻿
+
+@page "/"
 @using Models
 
 <EditForm Model=@Person OnValidSubmit=@ValidFormSubmitted OnInvalidSubmit=@InvalidFormSubmitted>
@@ -16,15 +18,23 @@
 		<InputNumber @bind-Value=Person.Age class="form-control" id="Age" />
 		<ValidationMessage For=@(() => Person.Age) />
 	</div>
+	<div class="form-group">
+		<label for="Email">Email</label>
+		<EmailComponent @bind-Value=Person.Email AspNetInput=true></EmailComponent>
+		@*<EmailComponent @bind-Email=Person.Email AspNetInput=true></EmailComponent>*@
+		@*<InputText @bind-Value=@Person.Email class="form-control" id="EmailAddress"/>*@
+		<ValidationMessage For=@(() => Person.Email) />
+	</div>
 	<input type="submit" class="btn btn-primary" value="Save" />
 </EditForm>
+
 
 @code {
 	Person Person = new Person();
 
 	void ValidFormSubmitted()
 	{
-		Person = new Person();
+		Person = new Person();		
 	}
 
 	void InvalidFormSubmitted()
@@ -32,3 +42,4 @@
 		System.Diagnostics.Debug.WriteLine("User submitted an invalid form");
 	}
 }
+

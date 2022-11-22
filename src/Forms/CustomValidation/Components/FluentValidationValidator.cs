@@ -117,8 +117,19 @@ namespace CustomValidation.Components
 			AddValidationResult(EditContext.Model, result);
 		}
 
+		private void log(object obj)			
+		{
+			string str = System.Text.Json.JsonSerializer.Serialize(obj);
+			Console.WriteLine(str);
+		}
+
 		async void FieldChanged(object sender, FieldChangedEventArgs args)
 		{
+			Console.WriteLine("sender:");
+			log(sender);
+			Console.WriteLine("args:");
+			log(args);
+
 			System.Diagnostics.Debug.WriteLine($"OnFieldChanged triggered: Validating a single property named {args.FieldIdentifier.FieldName}" +
 				$" on class {args.FieldIdentifier.Model.GetType().Name}");
 
@@ -133,12 +144,19 @@ namespace CustomValidation.Components
 			// FluentValidation specific, we need to tell it to only validate
 			// a specific property
 			var propertiesToValidate = new string[] { fieldIdentifier.FieldName };
+
+			Console.WriteLine("properties to validate:");
+			log(propertiesToValidate);
 			var fluentValidationContext =
 				new ValidationContext<object>(
 					instanceToValidate: fieldIdentifier.Model,
 					propertyChain: new FluentValidation.Internal.PropertyChain(),
 					validatorSelector: new FluentValidation.Internal.MemberNameValidatorSelector(propertiesToValidate)
 				);
+
+
+			Console.WriteLine("fluentValidationContext");
+			log(fluentValidationContext);
 
 			// Tell FluentValidation to validate the specified property on the object that was edited
 			ValidationResult result = await Validator.ValidateAsync(fluentValidationContext);

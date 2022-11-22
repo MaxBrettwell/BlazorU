@@ -1,0 +1,65 @@
+﻿@using System.Linq;
+@using System.Linq.Expressions;
+
+
+	<input type="button" @onclick="dothing">
+
+
+	@if (AspNetInput && ValueExpression != null)
+	{
+		@*<InputText @ref=refInput Value=@Value ValueExpression="@(() => Value)" class="form-control" id="EmailAddress" @onchange=UpdateValue/>*@
+		<InputText @ref=refInput Value=@Value ValueChanged=ValueChanged ValueExpression="this.ValueExpression" class="form-control" id="EmailAddress" @onchange=UpdateValue/>
+		@*<InputText Value=@Email ValueExpression=this.ValueExpression class="form-control" id="EmailAddress" @onchange=UpdateValue/>*@
+		@*<InputText @ref=refInput Value=@Email ValueExpression=@"() => Email"></InputText> class="form-control" id="EmailAddress"/>*@
+	}
+	else
+	{
+		<input type="text" @bind=this.Value @onblur=this.UpdateValue @oninput=this.UpdateValue>
+	}
+
+@code {
+
+
+
+	private InputText refInput;
+
+	[Parameter] public Expression<Func<string>>? ValueExpression { get; set; }
+
+
+	[Parameter]
+	public EditContext editContext { get; set; }
+
+	[Parameter]
+	public string Value { get; set; }
+
+	[Parameter]
+	public EventCallback<string> ValueChanged { get; set; }
+
+	[Parameter]
+	public bool AspNetInput { get; set; } = true;
+
+	private async Task UpdateValue()
+	{
+		Console.WriteLine(Value);
+		await ValueChanged.InvokeAsync(Value);
+	}
+	private async Task dothing()
+	{
+		Console.WriteLine("ValueExpression");
+		Console.WriteLine(this.ValueExpression);
+		
+	}
+
+
+
+	//public Expression<Func<string>>? ValueExpression { get; set; }
+
+
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+		
+		//ValueExpression = () => ();
+	}
+
+}
